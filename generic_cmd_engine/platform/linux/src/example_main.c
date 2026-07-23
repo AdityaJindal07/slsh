@@ -1,26 +1,31 @@
 #include <stdio.h>
-
+#include "linux_console.h"
+#include "shell_parser.h"
 #include "cmd_engine.h"
 
-enum {
-    CMD_ID_PING = 0x40U
-};
+int main(void) {
+    // Initialise parser
+    shell_parser_t parser;
+    shell_parser_init(&parser);
 
-static void handle_ping(void *context)
-{
-    const char *source = context;
-    printf("ping received from %s\n", source);
-}
+    // Print prompt
+    linux_console_print_prompt();
 
-int main(void)
-{
-    static const cmd_entry_t commands[] = {
-        { CMD_ID_PING, handle_ping }
-    };
-
-    if (cmd_engine_init(commands, sizeof(commands) / sizeof(commands[0])) != CMD_ENGINE_OK) {
-        return 1;
+    while (1) {
+        int ch = linux_console_getchar();
+        if (ch == EOF) break; // End of input
+        shell_parser_status_t status = shell_parser_process_char(&parser, (char)ch);
+        if (status == SHELL_PARSER_LINE_READY) {
+            // Line is ready – display parsed arguments
+            printf("\n[Parser] argc=%d\n", parser.argc);
+            for (int i = 0; i < parser.argc; ++i) {
+                printf("argv[%d] = '%s'\n", i, parser.argv[i]);
+            }
+            // Reset for next line and show prompt again
+            shell_parser_reset(&parser);
+            linux_console_print_prompt();
+        }
+        // No command execution at this checkpoint – just parsing
     }
-
-    return cmd_engine_execute(CMD_ID_PING, "Linux adapter") == CMD_ENGINE_OK ? 0 : 1;
+    return 0;
 }

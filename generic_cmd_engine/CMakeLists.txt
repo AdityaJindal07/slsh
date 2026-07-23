@@ -12,10 +12,16 @@ add_library(cmd_engine_core STATIC
 
 target_include_directories(cmd_engine_core
     PUBLIC core/include
+    PUBLIC parser/include
+    PUBLIC platform/linux/include
 )
 
 target_compile_options(cmd_engine_core PRIVATE
     -Wall -Wextra -Wpedantic
+)
+
+target_sources(cmd_engine_core PRIVATE
+    parser/src/shell_parser.c
 )
 
 add_executable(cmd_engine_example
