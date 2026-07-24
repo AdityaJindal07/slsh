@@ -8,6 +8,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 add_library(cmd_engine_core STATIC
     core/src/cmd_engine.c
+    core/src/builtin_cmds.c
 )
 
 target_include_directories(cmd_engine_core
