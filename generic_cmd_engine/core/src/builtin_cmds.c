@@ -1,6 +1,7 @@
-#include <stdio.h>
 #include "builtin_cmds.h"
 #include "shell_parser.h"
+#include "shell_io.h"
+#include <stdio.h>
 
 /* --------------------------------------------------------------- */
 /* Built‑in command callbacks                                        */
@@ -12,9 +13,9 @@ static void help_cmd(void *context)
     (void)context; /* unused */
     const char *list = cmd_engine_list_commands();
     if (list && *list) {
-        printf("Available commands: %s\n", list);
+        shell_printf("Available commands: %s\n", list);
     } else {
-        printf("No commands registered.\n");
+        shell_printf("No commands registered.\n");
     }
 }
 
@@ -22,25 +23,25 @@ static void help_cmd(void *context)
 static void ping_cmd(void *context)
 {
     (void)context; /* unused */
-    printf("pong\n");
+    shell_printf("pong\n");
 }
 
 /* echo: prints arguments passed as context */
 static void echo_cmd(void *context)
 {
     if (!context) {
-        printf("\n");
+        shell_printf("\n");
         return;
     }
 
     const shell_parser_t *parser = (const shell_parser_t *)context;
     if (parser->argc > 0 && parser->argc <= SHELL_PARSER_MAX_ARGS && parser->argv[0] != NULL) {
         for (int i = 1; i < parser->argc; ++i) {
-            printf("%s%s", parser->argv[i], (i == parser->argc - 1) ? "" : " ");
+            shell_printf("%s%s", parser->argv[i], (i == parser->argc - 1) ? "" : " ");
         }
-        printf("\n");
+        shell_printf("\n");
     } else {
-        printf("%s\n", (const char *)context);
+        shell_printf("%s\n", (const char *)context);
     }
 }
 
