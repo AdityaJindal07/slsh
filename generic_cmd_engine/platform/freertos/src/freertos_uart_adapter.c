@@ -2,12 +2,13 @@
 #include "shell_io.h"
 #include "shell_parser.h"
 #include "cmd_engine.h"
+#include "linux_console.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
-
+#include <unistd.h>
 /* -------------------------------------------------------------------------- */
 /* Portable Queue Implementation for Host & Embedded targets                 */
 /* -------------------------------------------------------------------------- */
@@ -165,7 +166,9 @@ void freertos_cmd_shell_task(void *pvParameters)
         int ch = shell_getchar();
         if (ch == EOF) {
             // No data yet – yield briefly and keep looping
-            Sleep(10);
+   
+    sleep(10000);      // Linux: microseconds (10 ms)
+
             continue;
         }
 

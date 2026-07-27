@@ -30,7 +30,6 @@ else()
     target_compile_options(cmd_engine_core PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-
 # Linux Console Example
 add_executable(cmd_engine_example
     platform/linux/src/example_main.c
@@ -45,12 +44,22 @@ add_executable(freertos_adapter_test
 )
 target_link_libraries(freertos_adapter_test PRIVATE cmd_engine_core)
 
+# -------------------------------------------------------------------------
+# Thread support (needed for freertos_shell on Linux)
+# -------------------------------------------------------------------------
+find_package(Threads REQUIRED)
+
 # FreeRTOS Interactive Shell
 add_executable(freertos_shell
     platform/freertos/src/freertos_uart_adapter.c
     platform/freertos/src/freertos_shell_main.c
 )
-target_link_libraries(freertos_shell PRIVATE cmd_engine_core)
+
+target_link_libraries(freertos_shell
+    PRIVATE
+        cmd_engine_core
+        Threads::Threads
+)
 
 # Subsystem Simulation Target (OBDH, EPS, TTC)
 add_executable(subsystem_sim

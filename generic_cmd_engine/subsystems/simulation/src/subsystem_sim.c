@@ -4,6 +4,7 @@
 #include "builtin_cmds.h"
 #include "shell_parser.h"
 #include "shell_io.h"
+#include "linux_console.h"
 
 /* -------------------------------------------------------------------------- */
 /* OBDH Subsystem Command Callbacks                                           */
