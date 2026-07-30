@@ -3,6 +3,7 @@
 #include "shell_parser.h"
 #include "cmd_engine.h"
 #include "linux_console.h"
+/*
 #ifdef _WIN32
 #include <windows.h>
 #define shell_sleep(ms) Sleep(ms)
@@ -10,6 +11,7 @@
 #include <unistd.h>
 #define shell_sleep(ms) usleep((ms) * 1000)
 #endif
+*/
 
 #include <stdlib.h>
 #include <string.h>
@@ -174,7 +176,7 @@ void freertos_cmd_shell_task(void *pvParameters)
         if (ch == EOF) {
             // No data yet – yield briefly and keep looping
    
-    shell_sleep(10);      // Linux: microseconds (10 ms)
+    //shell_sleep(10);      // Linux: microseconds (10 ms)
 
             continue;
         }
