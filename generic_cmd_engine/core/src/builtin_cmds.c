@@ -52,10 +52,10 @@ static void echo_cmd(void *context)
 cmd_engine_status_t register_builtin_commands(void)
 {
     cmd_engine_status_t st;
-    st = cmd_register("help", help_cmd);
+    st = cmd_register(CMD_HELP,"help",help_cmd);
     if (st != CMD_ENGINE_OK) return st;
-    st = cmd_register("ping", ping_cmd);
+    st = cmd_register(CMD_PING,"ping", ping_cmd);
     if (st != CMD_ENGINE_OK) return st;
-    st = cmd_register("echo", echo_cmd);
+    st = cmd_register(CMD_ECHO,"echo", echo_cmd);
     return st;
 }

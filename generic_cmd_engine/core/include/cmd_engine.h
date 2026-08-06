@@ -14,6 +14,12 @@ typedef struct {
 } cmd_entry_t;
 
 typedef enum {
+    CMD_HELP = 1,
+    CMD_PING,
+    CMD_ECHO
+} command_id_t;
+
+typedef enum {
     CMD_ENGINE_OK = 0,
     CMD_ENGINE_ERR_INVALID_ARGUMENT = -1,
     CMD_ENGINE_ERR_NOT_INITIALIZED = -2,
@@ -22,6 +28,8 @@ typedef enum {
     CMD_ENGINE_ERR_TABLE_FULL = -5
 } cmd_engine_status_t;
 
+
+
 /** Registers a non-empty, caller-owned command table. */
 cmd_engine_status_t cmd_engine_init(const cmd_entry_t *table, size_t count);
 
@@ -29,7 +37,7 @@ cmd_engine_status_t cmd_engine_init(const cmd_entry_t *table, size_t count);
 cmd_engine_status_t cmd_engine_execute(uint32_t cmd_id, void *context);
 
 /** Register a command name (case‑insensitive) with its handler. */
-cmd_engine_status_t cmd_register(const char *name, cmd_handler_t handler);
+cmd_engine_status_t cmd_register(uint32_t id, const char *name, cmd_handler_t handler);
 
 /** Alias for cmd_register as required by specifications. */
 #define command_register cmd_register

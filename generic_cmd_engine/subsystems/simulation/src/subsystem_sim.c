@@ -23,9 +23,9 @@ static void obdh_telemetry_dump_cmd(void *ctx)
 
 cmd_engine_status_t obdh_register_commands(void)
 {
-    cmd_engine_status_t st = cmd_register("obdh_status", obdh_status_cmd);
+    cmd_engine_status_t st = cmd_register(4U, "obdh_status", obdh_status_cmd);
     if (st != CMD_ENGINE_OK) return st;
-    return cmd_register("telemetry_dump", obdh_telemetry_dump_cmd);
+    return cmd_register(5U, "telemetry_dump", obdh_telemetry_dump_cmd);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -49,9 +49,9 @@ static void eps_rail_enable_cmd(void *ctx)
 
 cmd_engine_status_t eps_register_commands(void)
 {
-    cmd_engine_status_t st = cmd_register("vbat", eps_vbat_cmd);
+    cmd_engine_status_t st = cmd_register(6U, "vbat", eps_vbat_cmd);
     if (st != CMD_ENGINE_OK) return st;
-    return cmd_register("rail_enable", eps_rail_enable_cmd);
+    return cmd_register(7U, "rail_enable", eps_rail_enable_cmd);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -71,9 +71,9 @@ static void ttc_rssi_cmd(void *ctx)
 
 cmd_engine_status_t ttc_register_commands(void)
 {
-    cmd_engine_status_t st = cmd_register("beacon", ttc_beacon_cmd);
+    cmd_engine_status_t st = cmd_register(8U, "beacon", ttc_beacon_cmd);
     if (st != CMD_ENGINE_OK) return st;
-    return cmd_register("rssi", ttc_rssi_cmd);
+    return cmd_register(9U, "rssi", ttc_rssi_cmd);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -160,5 +160,4 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
-
 

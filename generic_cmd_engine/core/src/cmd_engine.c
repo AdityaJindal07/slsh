@@ -10,6 +10,7 @@
 #define CMD_MAX_ENTRIES 32
 
 typedef struct {
+    uint32_t id;
     char name[32];               /* lower‑case command name */
     cmd_handler_t handler;       /* function pointer */
 } cmd_slot_t;
@@ -19,41 +20,46 @@ static size_t cmd_count = 0U;
 
 /* -------------------------------------------------------------------------- */
 /* Existing API – kept for backward compatibility */
-static const cmd_entry_t *command_table = NULL;
-static size_t command_table_count = 0U;
+// static const cmd_entry_t *command_table = NULL;
+// static size_t command_table_count = 0U;
 
 cmd_engine_status_t cmd_engine_init(const cmd_entry_t *table, size_t count)
 {
-    if ((table == NULL) || (count == 0U)) {
-        command_table = NULL;
-        command_table_count = 0U;
-        return CMD_ENGINE_ERR_INVALID_ARGUMENT;
-    }
-    command_table = table;
-    command_table_count = count;
+    (void)table;
+    (void)count;
+
+    cmd_count = 0U;
+
     return CMD_ENGINE_OK;
 }
 
 cmd_engine_status_t cmd_engine_execute(uint32_t cmd_id, void *context)
 {
-    if ((command_table == NULL) || (command_table_count == 0U)) {
+    /* Ensure at least one command has been registered */
+    if (cmd_count == 0U) {
         return CMD_ENGINE_ERR_NOT_INITIALIZED;
     }
-    for (size_t i = 0U; i < command_table_count; ++i) {
-        if (command_table[i].id == cmd_id) {
-            if (command_table[i].handler == NULL) {
+
+    /* Search the registered command table using command ID */
+    for (size_t i = 0U; i < cmd_count; ++i) {
+        if (cmd_table[i].id == cmd_id) {
+
+            if (cmd_table[i].handler == NULL) {
                 return CMD_ENGINE_ERR_INVALID_ARGUMENT;
             }
-            command_table[i].handler(context);
+
+            cmd_table[i].handler(context);
             return CMD_ENGINE_OK;
         }
     }
+
+    /* Command ID not found */
     return CMD_ENGINE_ERR_UNKNOWN_COMMAND;
 }
 
 /* -------------------------------------------------------------------------- */
 /* New registration API (case‑insensitive) */
-cmd_engine_status_t cmd_register(const char *name, cmd_handler_t handler)
+cmd_engine_status_t cmd_register(uint32_t id, const char *name, cmd_handler_t handler)
 {
     if ((name == NULL) || (handler == NULL) || (name[0] == '\0')) {
         return CMD_ENGINE_ERR_INVALID_ARGUMENT;
@@ -75,6 +81,7 @@ cmd_engine_status_t cmd_register(const char *name, cmd_handler_t handler)
         }
     }
     /* Store */
+    cmd_table[cmd_count].id = id;
     strcpy(cmd_table[cmd_count].name, lowered);
     cmd_table[cmd_count].handler = handler;
     ++cmd_count;
@@ -97,8 +104,7 @@ cmd_engine_status_t cmd_engine_execute_by_name(const char *name, void *context)
             if (cmd_table[j].handler == NULL) {
                 return CMD_ENGINE_ERR_INVALID_ARGUMENT;
             }
-            cmd_table[j].handler(context);
-            return CMD_ENGINE_OK;
+            return cmd_engine_execute(cmd_table[j].id, context);
         }
     }
     return CMD_ENGINE_ERR_UNKNOWN_COMMAND;
