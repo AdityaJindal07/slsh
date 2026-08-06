@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <unistd.h>
+//#include <unistd.h>
 /* -------------------------------------------------------------------------- */
 /* Portable Queue Implementation for Host & Embedded targets                 */
 /* -------------------------------------------------------------------------- */
@@ -167,7 +167,7 @@ void freertos_cmd_shell_task(void *pvParameters)
         if (ch == EOF) {
             // No data yet – yield briefly and keep looping
    
-    sleep(10000);      // Linux: microseconds (10 ms)
+    //sleep(10000);      // Linux: microseconds (10 ms)
 
             continue;
         }
